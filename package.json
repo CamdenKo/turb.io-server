@@ -5,12 +5,15 @@
   "main": "server.js",
   "scripts": {
     "build": "webpack",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "test": "mocha"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
     "webpack": "^3.0.0"
   },
