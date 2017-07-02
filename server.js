@@ -12,7 +12,9 @@ server.on('request', app);
 
 var io = socketio(server);
 
+const gameLoop = require('./serverside/gameLoop')()
 
+let messageQ = []
 server.listen(1337, function () {
   console.log('The server is listening on port 1337!');
 });
@@ -27,5 +29,11 @@ io.on('connection', function (socket) {
   console.log(socket.id, 'connected');
   socket.on('click',function(){
     console.log('click!')
+  })
+  //mesage from server
+  socket.on('message', function(message){
+    console.log(message)
+    messageQ.push(message)
+    socket.broadcast.send(messageQ)
   })
 })

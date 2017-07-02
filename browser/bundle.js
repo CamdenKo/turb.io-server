@@ -3346,8 +3346,12 @@ socket.on('connect', function(){
   console.log('connected')
 })
 
+socket.on('message', (message) =>{
+  console.log(message)
+})
+
 __WEBPACK_IMPORTED_MODULE_1__gameEmitter_js__["a" /* default */].on('click',function(){
-  socket.emit('click')
+  socket.send(new Uint8ClampedArray([1]))
 })
 
 
@@ -6741,6 +6745,9 @@ gameEmitter.click = function(){
   gameEmitter.emit('click')
 }
 
+gameEmitter.sendUpdate = function(){
+  gameEmitter.emi
+}
 /* harmony default export */ __webpack_exports__["a"] = (gameEmitter);
 
 
