@@ -1,6 +1,6 @@
 const chai = require('chai')
 const expect = chai.expect
-const optimizer = require('../browser/helperFuncs/websocketOptimizer.js')
+const optimizer = require('../serverside/websocketOptimizer.js')
 const pOptimizer = require('../browser/helperFuncs/playerwebsocketOptimizer.js')
 chai.should()
 

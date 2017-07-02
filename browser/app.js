@@ -12,5 +12,5 @@ socket.on('message', (message) =>{
 })
 
 gameEmitter.on('click',function(){
-  socket.send(new Uint8ClampedArray([1]))
+  socket.send(new Uint8ClampedArray([1,2,3]))
 })

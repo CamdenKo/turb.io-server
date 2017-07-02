@@ -3346,12 +3346,13 @@ socket.on('connect', function(){
   console.log('connected')
 })
 
+//message from server
 socket.on('message', (message) =>{
   console.log(message)
 })
 
 __WEBPACK_IMPORTED_MODULE_1__gameEmitter_js__["a" /* default */].on('click',function(){
-  socket.send(new Uint8ClampedArray([1]))
+  socket.send(new Uint8ClampedArray([1,2,3]))
 })
 
 

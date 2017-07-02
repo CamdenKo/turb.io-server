@@ -1,5 +1,5 @@
 var path = require('path');
-
+process.setMaxListeners(0)
 var http = require('http');
 var server = http.createServer();
 
@@ -12,7 +12,11 @@ server.on('request', app);
 
 var io = socketio(server);
 
-const gameLoop = require('./serverside/gameLoop')()
+let gameLoopC = require('./gameLoop.js')
+let gameLoop = new gameLoopC()
+
+const startDelay = 1000
+const serverRefresh = 100
 
 let messageQ = []
 server.listen(1337, function () {
@@ -30,10 +34,22 @@ io.on('connection', function (socket) {
   socket.on('click',function(){
     console.log('click!')
   })
-  //mesage from server
+  //message from client
   socket.on('message', function(message){
     console.log(message)
     messageQ.push(message)
     socket.broadcast.send(messageQ)
   })
 })
+
+setTimeout(function(){
+  setInterval(function(){
+    // console.log('interval')
+    if(messageQ.length){
+      let tempMessages = messageQ
+      messageQ = []
+      gameLoop.readableIn = (tempMessages)
+      gameLoop.iteration()
+    }
+  },serverRefresh)}, startDelay
+)

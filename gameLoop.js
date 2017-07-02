@@ -1,5 +1,6 @@
-const optimizer = require('./websocketOptimizer.js')()
-const playerConstructor = require('./player.js')
+const optimizerC = require('./serverside/websocketOptimizer.js')
+const optimizer = new optimizerC()
+const playerConstructor = require('./serverside/player.js')
 
 function GameLoop() {
   this.readableIn =[]
@@ -12,8 +13,8 @@ GameLoop.prototype.removePlayer = function(id){
 }
 
 GameLoop.prototype.iteration = function(){
-  if(this.readableIn !== []){
-
+  if(this.readableIn.length){
+    console.log('good iteratoin!', this.readableIn)
   } else {
     throw new Error('Game loop cannot iterate without proccessInputs')
   }
@@ -36,6 +37,5 @@ GameLoop.prototype.proccessInputs = function(inArr){
     })
   })
 }
-
 
 module.exports = GameLoop
