@@ -36,7 +36,7 @@ io.on('connection', function (socket) {
     socket.player = {
       id: newPlayerId++,
       x: serverHelper.randomInt(100,400),
-      y: 1
+      y: serverHelper.randomInt(100,400)
     }
     socket.broadcast.emit('newplayer', socket.player)
   })

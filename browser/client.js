@@ -1,6 +1,7 @@
 import io from 'socket.io-client'
 import gameEmitter from './gameEmitter.js'
 let socket = io(window.location.origin)
+import {game, Game} from './game.js'
 
 let Client = {}
 Client.socket = socket
@@ -22,7 +23,7 @@ socket.on('message', (message) =>{
   console.log(message)
 })
 
-socket.on('newplayer', (player) => {
-  console.log(player)
+socket.on('newplayer', function(player){
+  Game.playerMap[player.id] = game.add.sprite(player.x,player.y,'sprite')
 })
-export default Client
+

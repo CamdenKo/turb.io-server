@@ -2,7 +2,7 @@ function Player(id,position,color,bpm,trails){
   this.id = id||0
   this.position = position||{x:0,y:0}
   this.color = color||0
-  this.bpm = bpm||0
+  this.bpm = bpm||150
   this.trails = trails||[]
 }
 
