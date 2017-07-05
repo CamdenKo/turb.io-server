@@ -13,7 +13,6 @@ websocketOptimizer.prototype.encrypt = function(arr){
           outRegArr.push(pair.x)
           outRegArr.push(pair.y)
         })
-        outRegArr.push(0)
       } else if (typeof obj[key] === 'object'){
         outRegArr.push(obj[key].x)
         outRegArr.push(obj[key].y)
@@ -22,6 +21,7 @@ websocketOptimizer.prototype.encrypt = function(arr){
         outRegArr.push(obj[key])
       }
     }
+    outRegArr.push(0)
   })
   return new Uint8ClampedArray(outRegArr)
 }

@@ -12,7 +12,4 @@ gameEmitter.click = function(){
   gameEmitter.emit('click')
 }
 
-gameEmitter.sendUpdate = function(){
-  gameEmitter.emi
-}
 export default gameEmitter

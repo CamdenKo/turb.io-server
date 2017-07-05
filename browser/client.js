@@ -12,7 +12,7 @@ Client.sendUpdate = function(){
 }
 
 gameEmitter.on('click',function(){
-  socket.send(new Uint8ClampedArray([1,2,3]))
+  socket.send(new Uint8Array([1,2,3]))
 })
 
 socket.on('connect', function(){
@@ -24,6 +24,13 @@ socket.on('message', (message) =>{
   console.log(message)
 })
 
-socket.on('init', (initArr) => {
-  console.log(initArr)
+socket.on('init', (initObj) => {
+  console.log(initObj.constructor === Uint8ClampedArray)
+  console.log(initObj)
+  let arr = Object.keys(initObj).map(key => initObj[key])
+  // console.log(initObj[0])
+  // console.log(new Uint8Array(initObj[0]))
+  console.log(arr)
+
+
 })

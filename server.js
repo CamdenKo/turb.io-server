@@ -36,6 +36,7 @@ io.on('connection', function (socket) {
   //initialize new player
   socket.player = serverHelper.randomPlayer(newPlayerId++)
   gameLoop.addPlayer(socket.player)
+  console.log('player', socket.player)
   socket.emit('init',gameLoop.playerInitData(socket.player.id))
 
   socket.on('click',function(){

@@ -3376,7 +3376,7 @@ Client.sendUpdate = function () {
 };
 
 _gameEmitter2.default.on('click', function () {
-  socket.send(new Uint8ClampedArray([1, 2, 3]));
+  socket.send(new Uint8Array([1, 2, 3]));
 });
 
 socket.on('connect', function () {
@@ -3388,8 +3388,15 @@ socket.on('message', function (message) {
   console.log(message);
 });
 
-socket.on('init', function (initArr) {
-  console.log(initArr);
+socket.on('init', function (initObj) {
+  console.log(initObj.constructor === Uint8ClampedArray);
+  console.log(initObj);
+  var arr = Object.keys(initObj).map(function (key) {
+    return initObj[key];
+  });
+  // console.log(initObj[0])
+  // console.log(new Uint8Array(initObj[0]))
+  console.log(arr);
 });
 
 /***/ }),
@@ -6802,9 +6809,6 @@ gameEmitter.click = function () {
   gameEmitter.emit('click');
 };
 
-gameEmitter.sendUpdate = function () {
-  gameEmitter.emi;
-};
 exports.default = gameEmitter;
 
 /***/ }),

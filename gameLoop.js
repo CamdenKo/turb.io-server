@@ -17,11 +17,10 @@ GameLoop.prototype.playerInitData = function(id){
   toEncrypt.push(this.players[id])
   for(let key in this.players){
     if(key != id){
-      console.log('key,id',key,id)
       toEncrypt.push(this.players[key])
     }
   }
-  return optimizer.encrypt(toEncrypt)
+  return toEncrypt.map(obj => obj.toTypedArr())
 }
 GameLoop.prototype.addPlayer = function(player){
   this.players[player.id] = player
