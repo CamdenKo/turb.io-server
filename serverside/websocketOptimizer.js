@@ -1,20 +1,24 @@
 function websocketOptimizer(){
 }
 
-//obj [{playerId: 0-255, color: 0 -255, bpm: 0 -255 trails:[{x,y},{x,y}]},{}...] the x and y values should be relative to game canvas
+//obj [{playerId: 0-255, position: {x,y}, color: 0 -255, bpm: 0 -255 trails:[{x,y},{x,y}]},{}...] the x and y values should be relative to game canvas
 //out[,,,,,0]
 websocketOptimizer.prototype.encrypt = function(arr){
   let outRegArr = []
   arr.forEach((obj) => {
     for(let key in obj){
-      if(typeof obj[key] === 'object'){
+      if(Array.isArray(obj[key])){
         //in trails array
         obj[key].forEach((pair) => {
           outRegArr.push(pair.x)
           outRegArr.push(pair.y)
         })
         outRegArr.push(0)
-      } else {
+      } else if (typeof obj[key] === 'object'){
+        outRegArr.push(obj[key].x)
+        outRegArr.push(obj[key].y)
+      }
+      else {
         outRegArr.push(obj[key])
       }
     }

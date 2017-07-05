@@ -34,12 +34,15 @@ describe('optimizer', () =>{
     it('should work for an empty array' ,() => {
       expect(optimizerObj.encrypt([])).to.eql(new Uint8ClampedArray(0))
     })
-    it('should work for a single player object', () => {
-      expect(optimizerObj.encrypt([{playerId: 1, color: 1, bpm: 1, trails:[{x:1,y:1}]}])).to.eql(new Uint8ClampedArray([1,1,1,1,1,0]))
+    it('should work for a single player', () => {
+      expect(optimizerObj.encrypt([{playerId: 1, position: {x:2,y:3}, color: 4, bpm: 5, trails:[{x:6,y:7}]}])).to.eql(new Uint8ClampedArray([1,2,3,4,5,6,7,0]))
     })
-    it('should work for multiple player objects', () => {
-      expect(optimizerObj.encrypt([{playerId: 1, color: 1, bpm: 1, trails:[{x:1,y:1}]},{playerId: 1, color: 1, bpm: 1, trails:[{x:1,y:1}]}])).to.eql(new Uint8ClampedArray([1,1,1,1,1,0,1,1,1,1,1,0]))
-    })
+    // it('should work for a single player object', () => {
+    //   expect(optimizerObj.encrypt([{playerId: 1, color: 1, bpm: 1, trails:[{x:1,y:1}]}])).to.eql(new Uint8ClampedArray([1,1,1,1,1,0]))
+    // })
+    // it('should work for multiple player objects', () => {
+    //   expect(optimizerObj.encrypt([{playerId: 1, color: 1, bpm: 1, trails:[{x:1,y:1}]},{playerId: 1, color: 1, bpm: 1, trails:[{x:1,y:1}]}])).to.eql(new Uint8ClampedArray([1,1,1,1,1,0,1,1,1,1,1,0]))
+    // })
   })
 
   describe('decrypt', () => {

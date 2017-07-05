@@ -1,3 +1,5 @@
+
+
 function Player(id,position,color,bpm,trails){
   this.id = id||0
   this.position = position||{x:0,y:0}
@@ -16,4 +18,7 @@ Player.prototype.completelyChangeTrails = function(trailArr){
   this.addTrails(trailArr)
 }
 
+Player.prototype.toObj = function(){
+  return {playerId: this.id, position: this.position, color: this.color, bpm : this.bpm, trails: this.trails}
+}
 module.exports = Player

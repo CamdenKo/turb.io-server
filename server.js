@@ -16,6 +16,7 @@ let gameLoop = new gameLoopC()
 const startDelay = 1000
 const serverRefresh = 100
 const serverHelper = require('./serverside/serverHelper.js')
+const playerC = require('./serverside/player.js')
 
 let messageQ = []
 let newPlayerId = 1
@@ -32,14 +33,11 @@ app.get('*', function (req, res) {
 
 io.on('connection', function (socket) {
   console.log(socket.id, 'connected');
-  socket.on('newplayer', function(){
-    socket.player = {
-      id: newPlayerId++,
-      x: serverHelper.randomInt(100,400),
-      y: serverHelper.randomInt(100,400)
-    }
-    socket.broadcast.emit('newplayer', socket.player)
-  })
+  //initialize new player
+  socket.player = serverHelper.randomPlayer(newPlayerId++)
+  gameLoop.addPlayer(socket.player)
+  socket.emit('init',gameLoop.playerInitData(socket.player.id))
+
   socket.on('click',function(){
     console.log('click!')
   })

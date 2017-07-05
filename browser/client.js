@@ -5,6 +5,7 @@ import {game, Game} from './game.js'
 
 let Client = {}
 Client.socket = socket
+Client.id = 0
 
 Client.sendUpdate = function(){
   socket.send(new Uint8ClampedArray([1]))
@@ -23,7 +24,6 @@ socket.on('message', (message) =>{
   console.log(message)
 })
 
-socket.on('newplayer', function(player){
-  Game.playerMap[player.id] = game.add.sprite(player.x,player.y,'sprite')
+socket.on('init', (initArr) => {
+  console.log(initArr)
 })
-
