@@ -3362,6 +3362,10 @@ var _gameEmitter2 = _interopRequireDefault(_gameEmitter);
 
 var _game = __webpack_require__(49);
 
+var _player = __webpack_require__(50);
+
+var _player2 = _interopRequireDefault(_player);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var socket = (0, _socket2.default)(window.location.origin);
@@ -3370,6 +3374,9 @@ var socket = (0, _socket2.default)(window.location.origin);
 var Client = {};
 Client.socket = socket;
 Client.id = 0;
+Client.me = new _player2.default();
+Client.players = {}; //id: PlayerC
+
 
 Client.sendUpdate = function () {
   socket.send(new Uint8ClampedArray([1]));
@@ -3389,15 +3396,58 @@ socket.on('message', function (message) {
 });
 
 socket.on('init', function (initObj) {
-  console.log(initObj.constructor === Uint8ClampedArray);
-  console.log(initObj);
+  console.log('socket init', initObj);
+  _game.Game.addNewPlayer(new _player2.default());
   var arr = Object.keys(initObj).map(function (key) {
     return initObj[key];
   });
   // console.log(initObj[0])
   // console.log(new Uint8Array(initObj[0]))
   console.log(arr);
+  setTimeout(convertArrToPlayers(arr), 1000);
 });
+
+function convertArrToPlayers(arr) {
+  if (!arr.length) {
+    return;
+  }
+  console.log(arr);
+  var index = 0;
+  var lastIndex = 0;
+  var temp = arr[index];
+
+  while (temp !== 0) {
+    temp = arr[++index];
+  }
+  Client.me = new _player2.default();
+  Client.me.fromArr(arr.slice(0, index));
+  Client.id = Client.me.id;
+  lastIndex = index;
+
+  while (index < arr.length) {
+    while (temp !== 0) {
+      temp = arr[++index];
+    }
+    var newPlayer = new _player2.default();
+    newPlayer.fromArr(arr.slice(lastIndex + 1, index));
+    if (!newPlayer.id) {
+      break;
+    }
+    Client.players[newPlayer.id] = newPlayer;
+    lastIndex = index++;
+    temp = arr[index];
+  }
+  console.log('finished while loop');
+  _game.game.add.sprite(1, 1, 'player');
+  _game.Game.addNewPlayer(Client.me);
+  for (var key in Client.players) {
+    if (key) {
+      _game.Game.addNewPlayer(Client.players[key]);
+    }
+  }
+  console.log('client.me', Client.me);
+  console.log('all other players', Client.players);
+}
 
 /***/ }),
 /* 23 */
@@ -6876,13 +6926,18 @@ Object.defineProperty(exports, "__esModule", {
 //message from server
 
 var Game = {};
+
+Game.playerMap = [];
+
 Game.init = function () {
   game.stage.disableVisibilityChange = true;
 };
 Game.preload = function () {
   game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.spritesheet('tileset', 'assets/map/tilesheet.png', 32, 32);
-  game.load.image('sprite', 'assets/sprites/sprite.png');
+  game.load.image('player', 'assets/sprites/sprite.png');
+  game.load.start();
+  console.log('finished preload');
 };
 
 Game.create = function () {
@@ -6894,7 +6949,14 @@ Game.create = function () {
     layer = map.createLayer(layerNum);
   }
   layer.inputEnabled = true;
+  game.add.sprite(10, 10, 'player');
   //send new player ping
+};
+
+Game.addNewPlayer = function (player) {
+  console.log('player', player);
+  console.log(player.id, player.position.x, player.position.y);
+  Game.playerMap[player.id] = game.add.sprite(player.position.x, player.position.y, 'player');
 };
 
 var game = new Phaser.Game(24 * 32, 17 * 32, Phaser.AUTO, document.getElementById('game'));
@@ -6903,6 +6965,69 @@ game.state.start('Game');
 
 exports.game = game;
 exports.Game = Game;
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function Player(id, position, color, bpm, trails) {
+  this.id = id || 0;
+  this.position = position || { x: 0, y: 0 };
+  this.color = color || 1;
+  this.bpm = bpm || 150;
+  this.trails = trails || [];
+}
+
+Player.prototype.fromArr = function (arr) {
+  this.id = arr[0];
+  this.position.x = arr[1];
+  this.position.y = arr[2];
+  this.color = arr[3];
+  this.bpm = arr[4];
+  for (var index = 5; index < arr.length; index += 2) {
+    if (arr[index] === 0) break;
+    this.trails.push({ x: arr[index], y: arr[index + 1] });
+  }
+};
+
+//in: [{x,y}, {x,y}]
+Player.prototype.addTrails = function (trailAdd) {
+  var _this = this;
+
+  trailAdd.forEach(function (ele) {
+    return _this.trails.push(ele);
+  });
+};
+
+Player.prototype.completelyChangeTrails = function (trailArr) {
+  this.trails = [];
+  this.addTrails(trailArr);
+};
+
+Player.prototype.toObj = function () {
+  return { playerId: this.id, position: this.position, color: this.color, bpm: this.bpm, trails: this.trails };
+};
+
+Player.prototype.toArr = function () {
+  var out = [this.id, this.position.x, this.position.y, this.color, this.bpm];
+  this.trails.forEach(function (obj) {
+    out.push(obj.x);
+    out.push(obj.y);
+  });
+  out.push(0);
+  return out;
+};
+
+Player.prototype.toTypedArr = function () {
+  return new Uint8Array(this.toArr());
+};
+exports.default = Player;
 
 /***/ })
 /******/ ]);
