@@ -9,7 +9,11 @@ canvas.addEventListener('mousedown', function(e){
 })
 
 gameEmitter.click = function(){
+  console.log('everthing has been loaded')
   gameEmitter.emit('click')
 }
 
+gameEmitter.ready = function(){
+  gameEmitter.emit('ready')
+}
 export default gameEmitter

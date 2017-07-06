@@ -10,13 +10,17 @@ Client.id = 0
 Client.me = new PlayerC()
 Client.players = {} //id: PlayerC
 
-
 Client.sendUpdate = function(){
   socket.send(new Uint8ClampedArray([1]))
 }
 
 gameEmitter.on('click',function(){
   socket.send(new Uint8Array([1,2,3]))
+})
+
+gameEmitter.on('ready', function(){
+
+  socket.emit('ready')
 })
 
 socket.on('connect', function(){
@@ -77,3 +81,5 @@ socket.on('init', (initObj) => {
   console.log('client.me', Client.me)
   console.log('all other players', Client.players)
 }
+
+setTimeout(function(){game.load.onLoadComplete.add(gameEmitter.ready,this)},2000)

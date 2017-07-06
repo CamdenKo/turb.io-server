@@ -26,7 +26,7 @@ Game.create = function(){
     layer = map.createLayer(layerNum)
   }
   layer.inputEnabled = true
-  game.add.sprite(10,10, 'player')
+  // this.addNewPlayer({id: 1,position:{x:200,y:200}})
   //send new player ping
 }
 

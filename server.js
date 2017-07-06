@@ -34,10 +34,13 @@ app.get('*', function (req, res) {
 io.on('connection', function (socket) {
   console.log(socket.id, 'connected');
   //initialize new player
-  socket.player = serverHelper.randomPlayer(newPlayerId++)
-  gameLoop.addPlayer(socket.player)
-  console.log('player', socket.player)
-  socket.emit('init',gameLoop.playerInitData(socket.player.id))
+
+  socket.on('ready', function(){
+    socket.player = serverHelper.randomPlayer(newPlayerId++)
+    gameLoop.addPlayer(socket.player)
+    console.log('player', socket.player)
+    socket.emit('init',gameLoop.playerInitData(socket.player.id))
+  })
 
   socket.on('click',function(){
     console.log('click!')

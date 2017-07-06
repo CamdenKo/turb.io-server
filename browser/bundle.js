@@ -3377,13 +3377,17 @@ Client.id = 0;
 Client.me = new _player2.default();
 Client.players = {}; //id: PlayerC
 
-
 Client.sendUpdate = function () {
   socket.send(new Uint8ClampedArray([1]));
 };
 
 _gameEmitter2.default.on('click', function () {
   socket.send(new Uint8Array([1, 2, 3]));
+});
+
+_gameEmitter2.default.on('ready', function () {
+
+  socket.emit('ready');
 });
 
 socket.on('connect', function () {
@@ -3438,7 +3442,7 @@ function convertArrToPlayers(arr) {
     temp = arr[index];
   }
   console.log('finished while loop');
-  _game.game.add.sprite(1, 1, 'player');
+  _game.game.add.sprite(100, 100, 'player');
   _game.Game.addNewPlayer(Client.me);
   for (var key in Client.players) {
     if (key) {
@@ -3448,6 +3452,10 @@ function convertArrToPlayers(arr) {
   console.log('client.me', Client.me);
   console.log('all other players', Client.players);
 }
+
+setTimeout(function () {
+  _game.game.load.onLoadComplete.add(_gameEmitter2.default.ready, this);
+}, 2000);
 
 /***/ }),
 /* 23 */
@@ -6856,9 +6864,13 @@ canvas.addEventListener('mousedown', function (e) {
 });
 
 gameEmitter.click = function () {
+  console.log('everthing has been loaded');
   gameEmitter.emit('click');
 };
 
+gameEmitter.ready = function () {
+  gameEmitter.emit('ready');
+};
 exports.default = gameEmitter;
 
 /***/ }),
@@ -6949,7 +6961,7 @@ Game.create = function () {
     layer = map.createLayer(layerNum);
   }
   layer.inputEnabled = true;
-  game.add.sprite(10, 10, 'player');
+  // this.addNewPlayer({id: 1,position:{x:200,y:200}})
   //send new player ping
 };
 
