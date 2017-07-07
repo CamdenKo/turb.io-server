@@ -5,7 +5,8 @@ var server = http.createServer();
 var express = require('express');
 var app = express();
 var socketio = require('socket.io');
-
+const optimizerC = require('./serverside/websocketOptimizer.js')
+const optimizer = new optimizerC()
 server.on('request', app);
 
 var io = socketio(server);
@@ -18,7 +19,7 @@ const serverRefresh = 100
 const serverHelper = require('./serverside/serverHelper.js')
 const playerC = require('./serverside/player.js')
 
-let messageQ = []
+let messageQ = {}
 let newPlayerId = 1
 
 server.listen(1337, function () {
@@ -39,7 +40,9 @@ io.on('connection', function (socket) {
     gameLoop.addPlayer(socket.player)
     socket.emit('init', gameLoop.playerInitData(socket.player.id))
     socket.playerId = socket.player.id
+    messageQ[socket.playerId] = []
     socket.broadcast.emit('newP', new Uint8Array( socket.player.toArr()))
+    console.log('created')
   })
   socket.on('disconnect', function() {
     gameLoop.removePlayer(socket.playerId)
@@ -47,18 +50,27 @@ io.on('connection', function (socket) {
   })
   //message from client
   socket.on('message', function(message){
-    messageQ.push(message)
-    socket.broadcast.send(messageQ)
+    messageQ[socket.playerId].push(message)
   })
 })
 
 setTimeout(function(){
   setInterval(function(){
-    if(messageQ.length){
-      let tempMessages = messageQ
-      messageQ = []
-      gameLoop.readableIn = (tempMessages)
+    let tempMessages = getAndResetMessageQ()
+    if(tempMessages.length){
+      gameLoop.proccessInputs(tempMessages)
       gameLoop.iteration()
     }
   },serverRefresh)}, startDelay
 )
+
+function getAndResetMessageQ(){
+  let out = []
+  for(let key in messageQ){
+    if(messageQ[key].length){
+      out.push(messageQ[key].pop())
+      messageQ[key] = []
+    }
+  }
+  return out
+}

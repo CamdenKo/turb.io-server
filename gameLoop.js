@@ -26,6 +26,7 @@ GameLoop.prototype.addPlayer = function(player){
   this.players[player.id] = player
 }
 
+//readableIn: [{id pos color bpm trails}{}]
 GameLoop.prototype.iteration = function(){
   if(this.readableIn.length){
     console.log('good iteratoin!', this.readableIn)

@@ -30,13 +30,17 @@ Client.sendUpdate = function(){
 }
 
 gameEmitter.on('click',function(){
-  socket.send(new Uint8Array([1,2,3]))
+  // socket.send(new Uint8Array([1,2,3]))
 })
 
 gameEmitter.on('ready', function(){
-
   socket.emit('ready')
 })
+
+gameEmitter.on('message', function(contents){
+  socket.send(contents)
+})
+
 Client.addPlayer = function(player){
   this.players[player.id] = player
   Game.addNewPlayer(player)
@@ -53,6 +57,7 @@ Client.connect = function(){
   socket.on('init', (initObj) => {
     let arr = Object.keys(initObj).map(key => initObj[key])
     convertArrToPlayers(arr)
+    Game.myId = Client.me.id
   })
 
   socket.on('newP', (initObj) => {

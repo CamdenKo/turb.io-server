@@ -31,7 +31,7 @@ websocketOptimizer.prototype.encrypt = function(arr){
 websocketOptimizer.prototype.decrypt = function(arr){
   let out = {}
   let index = 0
-  let continueReading = true
+
   out.id = arr[index++]
   out.pos = {}
   out.pos.x = arr[index++]

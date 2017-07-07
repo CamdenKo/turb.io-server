@@ -16,4 +16,8 @@ gameEmitter.click = function(){
 gameEmitter.ready = function(){
   gameEmitter.emit('ready')
 }
+
+gameEmitter.message = function(contents){
+  gameEmitter.emit('message', contents)
+}
 export default gameEmitter
