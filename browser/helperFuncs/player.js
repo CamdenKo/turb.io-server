@@ -1,11 +1,21 @@
-
-
 function Player(id,position,color,bpm,trails){
   this.id = id||0
   this.position = position||{x:0,y:0}
   this.color = color||1
   this.bpm = bpm||150
   this.trails = trails||[]
+}
+
+Player.prototype.fromArr = function(arr){
+  this.id = arr[0]
+  this.position.x = arr[1]
+  this.position.y = arr[2]
+  this.color = arr[3]
+  this.bpm = arr[4]
+  for(let index = 5; index < arr.length; index +=2){
+    if(arr[index] === 0) break;
+    this.trails.push({x:arr[index],y:arr[index+1]})
+  }
 }
 
 //in: [{x,y}, {x,y}]
@@ -35,4 +45,4 @@ Player.prototype.toArr = function(){
 Player.prototype.toTypedArr = function(){
   return new Uint8Array(this.toArr())
 }
-module.exports = Player
+export default Player
