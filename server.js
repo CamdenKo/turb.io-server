@@ -38,11 +38,12 @@ io.on('connection', function (socket) {
     socket.player = serverHelper.randomPlayer(newPlayerId++)
     gameLoop.addPlayer(socket.player)
     socket.emit('init', gameLoop.playerInitData(socket.player.id))
+    socket.playerId = socket.player.id
     socket.broadcast.emit('newP', new Uint8Array( socket.player.toArr()))
   })
-
-  socket.on('click',function(){
-    console.log('click!')
+  socket.on('disconnect', function() {
+    gameLoop.removePlayer(socket.playerId)
+    socket.broadcast.emit('removeP', new Uint8Array([socket.playerId]))
   })
   //message from client
   socket.on('message', function(message){

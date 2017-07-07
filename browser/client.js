@@ -8,7 +8,7 @@ let Client = {}
 Client.socket = socket
 Client.id = 0
 Client.me = new PlayerC()
-Client.players = {} //id: PlayerC
+Client.players = {}
 
 // console.log(game.isBooted)
 
@@ -60,6 +60,11 @@ Client.connect = function(){
     let playerArr = Object.keys(initObj).map(key => initObj[key])
     newPlayer.fromArr(playerArr)
     Game.addNewPlayer(newPlayer)
+  })
+
+  socket.on('removeP', (id) => {
+    Game.removePlayer(id[0])
+    delete Client.players[id[0]]
   })
 }
 

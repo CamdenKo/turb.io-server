@@ -3375,7 +3375,7 @@ var Client = {};
 Client.socket = socket;
 Client.id = 0;
 Client.me = new _player2.default();
-Client.players = {}; //id: PlayerC
+Client.players = {};
 
 // console.log(game.isBooted)
 
@@ -3431,6 +3431,11 @@ Client.connect = function () {
     });
     newPlayer.fromArr(playerArr);
     _game.Game.addNewPlayer(newPlayer);
+  });
+
+  socket.on('removeP', function (id) {
+    _game.Game.removePlayer(id[0]);
+    delete Client.players[id[0]];
   });
 };
 
@@ -6974,6 +6979,11 @@ Game.create = function () {
     layer = map.createLayer(layerNum);
   }
   layer.inputEnabled = true;
+};
+
+Game.removePlayer = function (playerId) {
+  this.playerMap[playerId].destroy();
+  delete this.playerMap[playerId];
 };
 
 Game.addNewPlayer = function (player) {

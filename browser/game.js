@@ -28,7 +28,10 @@ Game.create = function(){
   layer.inputEnabled = true
 }
 
-
+Game.removePlayer = function(playerId){
+  this.playerMap[playerId].destroy()
+  delete this.playerMap[playerId]
+}
 
 Game.addNewPlayer = function(player){
   Game.playerMap[player.id] = game.add.sprite(player.position.x,player.position.y,'player')

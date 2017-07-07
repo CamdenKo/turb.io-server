@@ -9,7 +9,7 @@ function GameLoop() {
 }
 
 GameLoop.prototype.removePlayer = function(id){
-  this.players[id] = null
+  delete this.players[id]
 }
 
 GameLoop.prototype.playerInitData = function(id){
