@@ -19,10 +19,8 @@ waitForGame()
 
 function waitForGame(){
   if(!game.isBooted || !game.load.hasLoaded){
-    console.log('wait')
     window.setTimeout(waitForGame, 100)
   } else{
-    console.log('attempt connect')
     Client.connect()
   }
 }
@@ -39,9 +37,12 @@ gameEmitter.on('ready', function(){
 
   socket.emit('ready')
 })
+Client.addPlayer = function(player){
+  this.players[player.id] = player
+  Game.addNewPlayer(player)
+}
 
 Client.connect = function(){
-  console.log('client.connect')
 
   socket.emit('ready')
 
@@ -50,10 +51,15 @@ Client.connect = function(){
   })
 
   socket.on('init', (initObj) => {
-    console.log('socket init', initObj)
-    // Game.addNewPlayer(new PlayerC())
     let arr = Object.keys(initObj).map(key => initObj[key])
     convertArrToPlayers(arr)
+  })
+
+  socket.on('newP', (initObj) => {
+    let newPlayer = new PlayerC()
+    let playerArr = Object.keys(initObj).map(key => initObj[key])
+    newPlayer.fromArr(playerArr)
+    Game.addNewPlayer(newPlayer)
   })
 }
 
@@ -61,7 +67,6 @@ Client.connect = function(){
    if(!arr.length){
      return
    }
-   console.log(arr)
   let index = 0
   let lastIndex = 0
   let temp = arr[index]
@@ -85,7 +90,6 @@ Client.connect = function(){
     lastIndex = index++
     temp = arr[index]
   }
-  console.log('other players', Client.players)
   Game.addNewPlayer(Client.me)
   for(let key in Client.players){
     if(key){

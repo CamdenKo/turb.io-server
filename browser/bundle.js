@@ -3386,10 +3386,8 @@ waitForGame();
 
 function waitForGame() {
   if (!_game.game.isBooted || !_game.game.load.hasLoaded) {
-    console.log('wait');
     window.setTimeout(waitForGame, 100);
   } else {
-    console.log('attempt connect');
     Client.connect();
   }
 }
@@ -3406,9 +3404,12 @@ _gameEmitter2.default.on('ready', function () {
 
   socket.emit('ready');
 });
+Client.addPlayer = function (player) {
+  this.players[player.id] = player;
+  _game.Game.addNewPlayer(player);
+};
 
 Client.connect = function () {
-  console.log('client.connect');
 
   socket.emit('ready');
 
@@ -3417,12 +3418,19 @@ Client.connect = function () {
   });
 
   socket.on('init', function (initObj) {
-    console.log('socket init', initObj);
-    // Game.addNewPlayer(new PlayerC())
     var arr = Object.keys(initObj).map(function (key) {
       return initObj[key];
     });
     convertArrToPlayers(arr);
+  });
+
+  socket.on('newP', function (initObj) {
+    var newPlayer = new _player2.default();
+    var playerArr = Object.keys(initObj).map(function (key) {
+      return initObj[key];
+    });
+    newPlayer.fromArr(playerArr);
+    _game.Game.addNewPlayer(newPlayer);
   });
 };
 
@@ -3430,7 +3438,6 @@ function convertArrToPlayers(arr) {
   if (!arr.length) {
     return;
   }
-  console.log(arr);
   var index = 0;
   var lastIndex = 0;
   var temp = arr[index];
@@ -3454,7 +3461,6 @@ function convertArrToPlayers(arr) {
     lastIndex = index++;
     temp = arr[index];
   }
-  console.log('other players', Client.players);
   _game.Game.addNewPlayer(Client.me);
   for (var key in Client.players) {
     if (key) {
@@ -6957,11 +6963,9 @@ Game.preload = function () {
   game.load.spritesheet('tileset', 'assets/map/tilesheet.png', 32, 32);
   game.load.image('player', 'assets/sprites/sprite.png');
   game.load.start();
-  console.log('finished preload');
 };
 
 Game.create = function () {
-  console.log('game create');
   Game.playerMap = {};
   var map = game.add.tilemap('map');
   map.addTilesetImage('tilesheet', 'tileset');
@@ -6973,9 +6977,6 @@ Game.create = function () {
 };
 
 Game.addNewPlayer = function (player) {
-
-  console.log('player', player);
-  console.log(player.id, player.position.x, player.position.y);
   Game.playerMap[player.id] = game.add.sprite(player.position.x, player.position.y, 'player');
 };
 

@@ -37,9 +37,8 @@ io.on('connection', function (socket) {
   socket.on('ready', function(){
     socket.player = serverHelper.randomPlayer(newPlayerId++)
     gameLoop.addPlayer(socket.player)
-    console.log('socket emit init', gameLoop.playerInitData(socket.player.id))
     socket.emit('init', gameLoop.playerInitData(socket.player.id))
-    console.log('finished emitting')
+    socket.broadcast.emit('newP', new Uint8Array( socket.player.toArr()))
   })
 
   socket.on('click',function(){
@@ -54,7 +53,6 @@ io.on('connection', function (socket) {
 
 setTimeout(function(){
   setInterval(function(){
-    // console.log('interval')
     if(messageQ.length){
       let tempMessages = messageQ
       messageQ = []

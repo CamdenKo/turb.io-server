@@ -15,11 +15,9 @@ Game.preload = function() {
   game.load.spritesheet('tileset', 'assets/map/tilesheet.png',32,32)
   game.load.image('player', 'assets/sprites/sprite.png')
   game.load.start()
-  console.log('finished preload')
 }
 
 Game.create = function(){
-  console.log('game create')
   Game.playerMap = {}
   let map = game.add.tilemap('map')
   map.addTilesetImage('tilesheet', 'tileset')
@@ -33,11 +31,7 @@ Game.create = function(){
 
 
 Game.addNewPlayer = function(player){
-
-  console.log('player',player)
-  console.log(player.id, player.position.x,player.position.y)
   Game.playerMap[player.id] = game.add.sprite(player.position.x,player.position.y,'player')
-
 }
 
 let game = new Phaser.Game(24*32,17*32, Phaser.AUTO, document.getElementById('game'))
