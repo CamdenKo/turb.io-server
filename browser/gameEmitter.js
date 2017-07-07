@@ -13,6 +13,6 @@ gameEmitter.click = function(){
 }
 
 gameEmitter.sendUpdate = function(){
-  gameEmitter.emi
+  // gameEmitter.emi
 }
 export default gameEmitter
