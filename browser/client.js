@@ -1,7 +1,7 @@
 import io from 'socket.io-client'
 import gameEmitter from './gameEmitter.js'
 let socket = io(window.location.origin)
-// import {game, Game} from './game.js'
+import {game, Game} from './game.js'
 import PlayerC from './helperFuncs/player.js'
 
 let Client = {}
@@ -14,6 +14,19 @@ Client.players = {} //id: PlayerC
 
 // console.log('game',game)
 // console.log('game.load',game.load)
+
+waitForGame()
+
+function waitForGame(){
+  if(!game.isBooted || !game.load.hasLoaded){
+    console.log('wait')
+    window.setTimeout(waitForGame, 100)
+  } else{
+    console.log('attempt connect')
+    Client.connect()
+  }
+}
+
 Client.sendUpdate = function(){
   socket.send(new Uint8ClampedArray([1]))
 }
@@ -27,19 +40,21 @@ gameEmitter.on('ready', function(){
   socket.emit('ready')
 })
 
-Client.connect = function(Game){
+Client.connect = function(){
   console.log('client.connect')
+
+  socket.emit('ready')
 
   socket.on('message', (message) =>{
     console.log(message)
   })
 
-  // socket.on('init', (initObj) => {
-  //   console.log('socket init', initObj)
-  //   // Game.addNewPlayer(new PlayerC())
-  //   let arr = Object.keys(initObj).map(key => initObj[key])
-  //   convertArrToPlayers(arr)
-  // })
+  socket.on('init', (initObj) => {
+    console.log('socket init', initObj)
+    // Game.addNewPlayer(new PlayerC())
+    let arr = Object.keys(initObj).map(key => initObj[key])
+    convertArrToPlayers(arr)
+  })
 }
 
  function convertArrToPlayers (arr){
@@ -57,7 +72,8 @@ Client.connect = function(Game){
   Client.me = new PlayerC()
   Client.me.fromArr(arr.slice(0,index))
   Client.id = Client.me.id
-  lastIndex = index
+  lastIndex = index++
+  temp = arr[index]
 
   while(index < arr.length){
     while(temp !== 0){
@@ -65,20 +81,17 @@ Client.connect = function(Game){
     }
     let newPlayer = new PlayerC()
     newPlayer.fromArr(arr.slice(lastIndex + 1, index))
-    if(!newPlayer.id){break}
     Client.players[newPlayer.id] = newPlayer
     lastIndex = index++
     temp = arr[index]
   }
-  console.log('finished while loop')
-  // game.add.sprite(100,100,'player')
-  // Game.addNewPlayer(Client.me)
-  // for(let key in Client.players){
-  //   if(key){
-  //     Game.addNewPlayer(Client.players[key])
-  //   }
-  // }
-  console.log('client.me', Client.me)
-  console.log('all other players', Client.players)
+  console.log('other players', Client.players)
+  Game.addNewPlayer(Client.me)
+  for(let key in Client.players){
+    if(key){
+      Game.addNewPlayer(Client.players[key])
+    }
+  }
+
 }
-export default Client
+// export default Client

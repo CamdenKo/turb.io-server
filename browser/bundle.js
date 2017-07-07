@@ -108,7 +108,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = __webpack_require__(27);
+exports = module.exports = __webpack_require__(26);
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -269,7 +269,7 @@ function localstorage() {
     return window.localStorage;
   } catch (e) {}
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(25)))
 
 /***/ }),
 /* 2 */
@@ -447,15 +447,15 @@ Emitter.prototype.hasListeners = function (event) {
  * Module dependencies.
  */
 
-var keys = __webpack_require__(35);
+var keys = __webpack_require__(34);
 var hasBinary = __webpack_require__(10);
-var sliceBuffer = __webpack_require__(36);
-var after = __webpack_require__(37);
-var utf8 = __webpack_require__(38);
+var sliceBuffer = __webpack_require__(35);
+var after = __webpack_require__(36);
+var utf8 = __webpack_require__(37);
 
 var base64encoder;
 if (global && global.ArrayBuffer) {
-  base64encoder = __webpack_require__(40);
+  base64encoder = __webpack_require__(39);
 }
 
 /**
@@ -513,7 +513,7 @@ var err = { type: 'error', data: 'parser error' };
  * Create a blob api even for blob builder when vendor prefixes exist
  */
 
-var Blob = __webpack_require__(41);
+var Blob = __webpack_require__(40);
 
 /**
  * Encodes a packet.
@@ -1122,7 +1122,7 @@ module.exports = function (a, b) {
 var debug = __webpack_require__(1)('socket.io-parser');
 var Emitter = __webpack_require__(2);
 var hasBin = __webpack_require__(10);
-var binary = __webpack_require__(29);
+var binary = __webpack_require__(28);
 var isBuf = __webpack_require__(12);
 
 /**
@@ -1518,7 +1518,7 @@ function error() {
 
 // browser shim for xmlhttprequest module
 
-var hasCORS = __webpack_require__(33);
+var hasCORS = __webpack_require__(32);
 
 module.exports = function (opts) {
   var xdomain = opts.xdomain;
@@ -1880,7 +1880,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * Module dependencies.
  */
 
-var eio = __webpack_require__(30);
+var eio = __webpack_require__(29);
 var Socket = __webpack_require__(19);
 var Emitter = __webpack_require__(2);
 var parser = __webpack_require__(6);
@@ -1888,7 +1888,7 @@ var on = __webpack_require__(20);
 var bind = __webpack_require__(21);
 var debug = __webpack_require__(1)('socket.io-client:manager');
 var indexOf = __webpack_require__(18);
-var Backoff = __webpack_require__(47);
+var Backoff = __webpack_require__(46);
 
 /**
  * IE6+ hasOwnProperty
@@ -2460,9 +2460,9 @@ Manager.prototype.onreconnect = function () {
  */
 
 var XMLHttpRequest = __webpack_require__(7);
-var XHR = __webpack_require__(34);
-var JSONP = __webpack_require__(42);
-var websocket = __webpack_require__(43);
+var XHR = __webpack_require__(33);
+var JSONP = __webpack_require__(41);
+var websocket = __webpack_require__(42);
 
 /**
  * Export transports.
@@ -2877,7 +2877,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var parser = __webpack_require__(6);
 var Emitter = __webpack_require__(2);
-var toArray = __webpack_require__(46);
+var toArray = __webpack_require__(45);
 var on = __webpack_require__(20);
 var bind = __webpack_require__(21);
 var debug = __webpack_require__(1)('socket.io-client:socket');
@@ -3352,75 +3352,15 @@ module.exports = function (obj, fn) {
 "use strict";
 
 
-var _client = __webpack_require__(23);
-
-var _client2 = _interopRequireDefault(_client);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Game = {}; //message from server
-
-Game.playerMap = [];
-
-Game.init = function () {
-  game.stage.disableVisibilityChange = true;
-};
-Game.preload = function () {
-  game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON);
-  game.load.spritesheet('tileset', 'assets/map/tilesheet.png', 32, 32);
-  game.load.image('player', 'assets/sprites/sprite.png');
-  game.load.start();
-  console.log('finished preload');
-};
-
-Game.create = function () {
-  console.log('game create');
-  Game.playerMap = {};
-  var map = game.add.tilemap('map');
-  map.addTilesetImage('tilesheet', 'tileset');
-  var layer = void 0;
-  for (var layerNum = 0; layerNum < map.layers.length; layerNum++) {
-    layer = map.createLayer(layerNum);
-  }
-  layer.inputEnabled = true;
-  _client2.default.connect(this);
-  // this.addNewPlayer({id: 1,position:{x:200,y:200}})
-  //send new player ping
-  _client2.default.socket.on('init', function (inData) {
-    return console.log(inData);
-  });
-};
-
-Game.addNewPlayer = function (player) {
-  console.log('player', player);
-  console.log(player.id, player.position.x, player.position.y);
-  Game.playerMap[player.id] = game.add.sprite(player.position.x, player.position.y, 'player');
-};
-
-var game = new Phaser.Game(24 * 32, 17 * 32, Phaser.AUTO, document.getElementById('game'));
-game.state.add('Game', Game);
-game.state.start('Game');
-
-// export {game, Game}
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _socket = __webpack_require__(24);
+var _socket = __webpack_require__(23);
 
 var _socket2 = _interopRequireDefault(_socket);
 
-var _gameEmitter = __webpack_require__(48);
+var _gameEmitter = __webpack_require__(47);
 
 var _gameEmitter2 = _interopRequireDefault(_gameEmitter);
+
+var _game = __webpack_require__(49);
 
 var _player = __webpack_require__(50);
 
@@ -3429,7 +3369,6 @@ var _player2 = _interopRequireDefault(_player);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var socket = (0, _socket2.default)(window.location.origin);
-// import {game, Game} from './game.js'
 
 
 var Client = {};
@@ -3442,6 +3381,19 @@ Client.players = {}; //id: PlayerC
 
 // console.log('game',game)
 // console.log('game.load',game.load)
+
+waitForGame();
+
+function waitForGame() {
+  if (!_game.game.isBooted || !_game.game.load.hasLoaded) {
+    console.log('wait');
+    window.setTimeout(waitForGame, 100);
+  } else {
+    console.log('attempt connect');
+    Client.connect();
+  }
+}
+
 Client.sendUpdate = function () {
   socket.send(new Uint8ClampedArray([1]));
 };
@@ -3455,19 +3407,23 @@ _gameEmitter2.default.on('ready', function () {
   socket.emit('ready');
 });
 
-Client.connect = function (Game) {
+Client.connect = function () {
   console.log('client.connect');
+
+  socket.emit('ready');
 
   socket.on('message', function (message) {
     console.log(message);
   });
 
-  // socket.on('init', (initObj) => {
-  //   console.log('socket init', initObj)
-  //   // Game.addNewPlayer(new PlayerC())
-  //   let arr = Object.keys(initObj).map(key => initObj[key])
-  //   convertArrToPlayers(arr)
-  // })
+  socket.on('init', function (initObj) {
+    console.log('socket init', initObj);
+    // Game.addNewPlayer(new PlayerC())
+    var arr = Object.keys(initObj).map(function (key) {
+      return initObj[key];
+    });
+    convertArrToPlayers(arr);
+  });
 };
 
 function convertArrToPlayers(arr) {
@@ -3485,7 +3441,8 @@ function convertArrToPlayers(arr) {
   Client.me = new _player2.default();
   Client.me.fromArr(arr.slice(0, index));
   Client.id = Client.me.id;
-  lastIndex = index;
+  lastIndex = index++;
+  temp = arr[index];
 
   while (index < arr.length) {
     while (temp !== 0) {
@@ -3493,28 +3450,22 @@ function convertArrToPlayers(arr) {
     }
     var newPlayer = new _player2.default();
     newPlayer.fromArr(arr.slice(lastIndex + 1, index));
-    if (!newPlayer.id) {
-      break;
-    }
     Client.players[newPlayer.id] = newPlayer;
     lastIndex = index++;
     temp = arr[index];
   }
-  console.log('finished while loop');
-  // game.add.sprite(100,100,'player')
-  // Game.addNewPlayer(Client.me)
-  // for(let key in Client.players){
-  //   if(key){
-  //     Game.addNewPlayer(Client.players[key])
-  //   }
-  // }
-  console.log('client.me', Client.me);
-  console.log('all other players', Client.players);
+  console.log('other players', Client.players);
+  _game.Game.addNewPlayer(Client.me);
+  for (var key in Client.players) {
+    if (key) {
+      _game.Game.addNewPlayer(Client.players[key]);
+    }
+  }
 }
-exports.default = Client;
+// export default Client
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3526,7 +3477,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * Module dependencies.
  */
 
-var url = __webpack_require__(25);
+var url = __webpack_require__(24);
 var parser = __webpack_require__(6);
 var Manager = __webpack_require__(13);
 var debug = __webpack_require__(1)('socket.io-client');
@@ -3616,7 +3567,7 @@ exports.Manager = __webpack_require__(13);
 exports.Socket = __webpack_require__(19);
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3699,7 +3650,7 @@ function url(uri, loc) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3892,7 +3843,7 @@ process.umask = function () {
 };
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3910,7 +3861,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = __webpack_require__(28);
+exports.humanize = __webpack_require__(27);
 
 /**
  * The currently active debug mode names, and names to skip.
@@ -4102,7 +4053,7 @@ function coerce(val) {
 }
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4255,7 +4206,7 @@ function plural(ms, n, name) {
 }
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4408,6 +4359,15 @@ exports.removeBlobs = function (data, callback) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(30);
+
+/***/ }),
 /* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4415,15 +4375,6 @@ exports.removeBlobs = function (data, callback) {
 
 
 module.exports = __webpack_require__(31);
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(32);
 
 /**
  * Exports parser
@@ -4434,7 +4385,7 @@ module.exports = __webpack_require__(32);
 module.exports.parser = __webpack_require__(3);
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4452,7 +4403,7 @@ var debug = __webpack_require__(1)('engine.io-client:socket');
 var index = __webpack_require__(18);
 var parser = __webpack_require__(3);
 var parseuri = __webpack_require__(9);
-var parsejson = __webpack_require__(45);
+var parsejson = __webpack_require__(44);
 var parseqs = __webpack_require__(4);
 
 /**
@@ -5178,7 +5129,7 @@ Socket.prototype.filterUpgrades = function (upgrades) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5201,7 +5152,7 @@ try {
 }
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5622,7 +5573,7 @@ function unloadHandler() {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5648,7 +5599,7 @@ module.exports = Object.keys || function keys(obj) {
 };
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5693,7 +5644,7 @@ module.exports = function (arraybuffer, start, end) {
 };
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5729,7 +5680,7 @@ function after(count, callback, err_cb) {
 function noop() {}
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5989,10 +5940,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		root.utf8 = utf8;
 	}
 })(undefined);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)(module), __webpack_require__(0)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38)(module), __webpack_require__(0)))
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6022,7 +5973,7 @@ module.exports = function (module) {
 };
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6104,7 +6055,7 @@ module.exports = function (module) {
 })();
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6204,7 +6155,7 @@ module.exports = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6443,7 +6394,7 @@ JSONPPolling.prototype.doWrite = function (data, fn) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6463,7 +6414,7 @@ var BrowserWebSocket = global.WebSocket || global.MozWebSocket;
 var NodeWebSocket;
 if (typeof window === 'undefined') {
   try {
-    NodeWebSocket = __webpack_require__(44);
+    NodeWebSocket = __webpack_require__(43);
   } catch (e) {}
 }
 
@@ -6737,13 +6688,13 @@ WS.prototype.check = function () {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports) {
 
 /* (ignored) */
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6782,7 +6733,7 @@ module.exports = function parsejson(data) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6803,7 +6754,7 @@ function toArray(list, index) {
 }
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6894,7 +6845,7 @@ Backoff.prototype.setJitter = function (jitter) {
 };
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6904,7 +6855,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _eventEmitter = __webpack_require__(49);
+var _eventEmitter = __webpack_require__(48);
 
 var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
 
@@ -6930,7 +6881,7 @@ gameEmitter.ready = function () {
 exports.default = gameEmitter;
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6980,6 +6931,60 @@ EventEmitter.prototype.emit = function (eventName) {
   });
 };
 exports.default = EventEmitter;
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+//message from server
+
+// import Client from './client.js'
+var Game = {};
+
+Game.playerMap = [];
+
+Game.init = function () {
+  game.stage.disableVisibilityChange = true;
+};
+Game.preload = function () {
+  game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON);
+  game.load.spritesheet('tileset', 'assets/map/tilesheet.png', 32, 32);
+  game.load.image('player', 'assets/sprites/sprite.png');
+  game.load.start();
+  console.log('finished preload');
+};
+
+Game.create = function () {
+  console.log('game create');
+  Game.playerMap = {};
+  var map = game.add.tilemap('map');
+  map.addTilesetImage('tilesheet', 'tileset');
+  var layer = void 0;
+  for (var layerNum = 0; layerNum < map.layers.length; layerNum++) {
+    layer = map.createLayer(layerNum);
+  }
+  layer.inputEnabled = true;
+};
+
+Game.addNewPlayer = function (player) {
+
+  console.log('player', player);
+  console.log(player.id, player.position.x, player.position.y);
+  Game.playerMap[player.id] = game.add.sprite(player.position.x, player.position.y, 'player');
+};
+
+var game = new Phaser.Game(24 * 32, 17 * 32, Phaser.AUTO, document.getElementById('game'));
+game.state.add('Game', Game);
+game.state.start('Game');
+
+exports.game = game;
+exports.Game = Game;
 
 /***/ }),
 /* 50 */
