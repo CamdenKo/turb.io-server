@@ -13,14 +13,16 @@ GameLoop.prototype.removePlayer = function(id){
 }
 
 GameLoop.prototype.playerInitData = function(id){
+  console.log('playerInitData ')
   let toEncrypt = []
-  toEncrypt.concat(this.players[id].toArr())
+  console.log(id)
+  toEncrypt = toEncrypt.concat(this.players[id].toArr())
   for(let key in this.players){
     if(key != id){
       toEncrypt = toEncrypt.concat(this.players[key].toArr())
     }
   }
-  console.log('toEncrypt', toEncrypt)
+  console.log('playerInitData out', toEncrypt)
   return new Uint8Array(toEncrypt)
 }
 GameLoop.prototype.addPlayer = function(player){

@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "webpack",
-    "start": "nodemon server.js",
+    "start": "webpack -w & nodemon server.js",
     "test": "mocha"
   },
   "keywords": [],

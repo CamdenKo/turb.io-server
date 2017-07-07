@@ -35,19 +35,17 @@ io.on('connection', function (socket) {
   console.log(socket.id, 'connected');
   //initialize new player
 
-  socket.on('ready', function(){
-    socket.player = serverHelper.randomPlayer(newPlayerId++)
-    gameLoop.addPlayer(socket.player)
-    console.log('player', socket.player)
-    socket.emit('init',gameLoop.playerInitData(socket.player.id))
-  })
+  socket.player = serverHelper.randomPlayer(newPlayerId++)
+  gameLoop.addPlayer(socket.player)
+  console.log('socket emit init', gameLoop.playerInitData(socket.player.id))
+  socket.emit('init', gameLoop.playerInitData(socket.player.id))
+  console.log('finished emitting')
 
   socket.on('click',function(){
     console.log('click!')
   })
   //message from client
   socket.on('message', function(message){
-    console.log(message)
     messageQ.push(message)
     socket.broadcast.send(messageQ)
   })
