@@ -13,12 +13,7 @@ gameEmitter.click = function(){
   gameEmitter.emit('click')
 }
 
-<<<<<<< HEAD
-gameEmitter.sendUpdate = function(){
-  // gameEmitter.emi
-=======
 gameEmitter.ready = function(){
   gameEmitter.emit('ready')
->>>>>>> playerCreate
 }
 export default gameEmitter
