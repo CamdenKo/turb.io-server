@@ -14,8 +14,8 @@ var io = socketio(server);
 let gameLoopC = require('./gameLoop.js')
 let gameLoop = new gameLoopC()
 
-const startDelay = 1000
-const serverRefresh = 100
+const startDelay = 3000
+const serverRefresh = 45
 const serverHelper = require('./serverside/serverHelper.js')
 const playerC = require('./serverside/player.js')
 
@@ -41,12 +41,11 @@ io.on('connection', function (socket) {
     socket.emit('init', gameLoop.playerInitData(socket.player.id))
     socket.playerId = socket.player.id
     messageQ[socket.playerId] = []
-    socket.broadcast.emit('newP', new Uint8Array( socket.player.toArr()))
-    console.log('created')
+    socket.broadcast.emit('newP', new Uint16Array( socket.player.toArr()))
   })
   socket.on('disconnect', function() {
     gameLoop.removePlayer(socket.playerId)
-    socket.broadcast.emit('removeP', new Uint8Array([socket.playerId]))
+    socket.broadcast.emit('removeP', new Uint16Array([socket.playerId]))
   })
   //message from client
   socket.on('message', function(message){
@@ -59,7 +58,7 @@ setTimeout(function(){
     let tempMessages = getAndResetMessageQ()
     if(tempMessages.length){
       gameLoop.proccessInputs(tempMessages)
-      gameLoop.iteration()
+      io.send(gameLoop.iteration())
     }
   },serverRefresh)}, startDelay
 )

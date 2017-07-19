@@ -43,6 +43,6 @@ Player.prototype.toArr = function(){
 }
 
 Player.prototype.toTypedArr = function(){
-  return new Uint8Array(this.toArr())
+  return new Uint16Array(this.toArr())
 }
 export default Player

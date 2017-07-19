@@ -3406,11 +3406,16 @@ var _player = __webpack_require__(50);
 
 var _player2 = _interopRequireDefault(_player);
 
+var _playerwebsocketOptimizer = __webpack_require__(51);
+
+var _playerwebsocketOptimizer2 = _interopRequireDefault(_playerwebsocketOptimizer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var socket = (0, _socket2.default)(window.location.origin);
 
 
+var optimizer = new _playerwebsocketOptimizer2.default();
 var Client = {};
 Client.socket = socket;
 Client.id = 0;
@@ -3458,7 +3463,19 @@ Client.connect = function () {
   socket.emit('ready');
 
   socket.on('message', function (message) {
-    console.log(message);
+    console.log('message', message);
+    var playerArr = Object.keys(message).map(function (key) {
+      return message[key];
+    });
+
+    var readableMsg = optimizer.decrypt(playerArr);
+    console.log(readableMsg);
+    readableMsg.forEach(function (ele) {
+      if (ele.playerId != Client.me.id) {
+        console.log('ele', ele);
+        _game.Game.moveOtherPlayer(ele.playerId, ele.position.x, ele.position.y);
+      }
+    });
   });
 
   socket.on('init', function (initObj) {
@@ -6968,14 +6985,19 @@ var _gameEmitter = __webpack_require__(22);
 
 var _gameEmitter2 = _interopRequireDefault(_gameEmitter);
 
+var _pool = __webpack_require__(52);
+
+var _pool2 = _interopRequireDefault(_pool);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log(_gameEmitter2.default);
-// import Client from './client.js'
-//message from server
+console.log(_gameEmitter2.default); //message from server
 
+// import Client from './client.js'
 var Game = {};
 var key = {};
+var Sprites = {};
+var soundpool = void 0;
 
 Game.playerMap = [];
 Game.myId = -1;
@@ -6996,8 +7018,10 @@ Game.init = function () {
 Game.preload = function () {
   game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.spritesheet('tileset', 'assets/map/tilesheet.png', 32, 32);
-  game.load.image('player', 'assets/sprites/sprite.png');
+  Sprites.player = game.load.image('player', 'assets/sprites/sprite.png');
   game.load.audio('music', 'assets/music/all.mp3');
+  soundpool = new _pool2.default(game, Sprites.player, 20, 'sounds');
+
   game.load.start();
 };
 
@@ -7020,6 +7044,8 @@ Game.create = function () {
     left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
     right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
   };
+
+  soundpool.create(100, 100, { velocity: { x: 100, y: 0 } });
 };
 
 Game.movePlayer = function (id, x, y) {
@@ -7032,6 +7058,13 @@ Game.movePlayer = function (id, x, y) {
   tween.onComplete.add(function () {
     Game.canMoveAgain();
   });
+};
+
+Game.moveOtherPlayer = function (id, x, y) {
+  var player = Game.playerMap[id];
+  var tween = game.add.tween(player);
+  tween.to({ x: x, y: y }, 30);
+  tween.start();
 };
 
 Game.update = function () {
@@ -7052,7 +7085,7 @@ Game.update = function () {
         this.movePlayer(this.myId, x + distance, y);
       }
     } else {
-      _gameEmitter2.default.message(new Uint8Array([this.myId, x, y, 1, gameProps.bpm, []]));
+      _gameEmitter2.default.message(new Uint16Array([this.myId, x, y, 1, gameProps.bpm, []]));
     }
   }
 };
@@ -7135,9 +7168,120 @@ Player.prototype.toArr = function () {
 };
 
 Player.prototype.toTypedArr = function () {
-  return new Uint8Array(this.toArr());
+  return new Uint16Array(this.toArr());
 };
 exports.default = Player;
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function PlayerWebSocketOptimizer() {}
+
+//obj{id,pos:{},color, bpm, trails: [{x,y},{x,y}]}
+//out[id,pos,color,bpm,trail positions]
+PlayerWebSocketOptimizer.prototype.encrypt = function (obj) {
+  var out = [obj.id, obj.pos.x, obj.pos.y, obj.color, obj.bpm];
+  obj.trails.forEach(function (element) {
+    out.push(element.x);
+    out.push(element.y);
+  }, this);
+  return new Uint16Array(out);
+};
+
+//arr
+//out [{playerId: 0-255, color: 0 -255, bpm: 0 -255 trails:[{x,y},{x,y}]},{}...]
+PlayerWebSocketOptimizer.prototype.decrypt = function (arr) {
+  var out = [];
+  var inIndex = 0;
+  var outIndex = 0;
+  while (inIndex < arr.length) {
+    out.push({});
+    out[outIndex].playerId = arr[inIndex++];
+    out[outIndex].position = {};
+    out[outIndex].position.x = arr[inIndex++];
+    out[outIndex].position.y = arr[inIndex++];
+    out[outIndex].color = arr[inIndex++];
+    out[outIndex].bpm = arr[inIndex++];
+    out[outIndex].trails = [];
+    var temp = arr[inIndex];
+    var trailIndex = 0;
+    while (temp && temp !== 0) {
+      out[outIndex].trails.push({ x: arr[inIndex], y: arr[inIndex + 1] });
+      inIndex += 2;
+      temp = arr[inIndex];
+    }
+    inIndex++;
+    outIndex++;
+  }
+  return out;
+};
+
+module.exports = PlayerWebSocketOptimizer;
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Pool = function (_Phaser$Group) {
+  _inherits(Pool, _Phaser$Group);
+
+  function Pool(game, spriteType, instances, name) {
+    var _ret;
+
+    _classCallCheck(this, Pool);
+
+    var _this = _possibleConstructorReturn(this, (Pool.__proto__ || Object.getPrototypeOf(Pool)).call(this, game, game.world, name));
+
+    _this.game = game;
+    _this.spriteType = spriteType;
+
+    var maxInstances = 30;
+
+    if (instances > 0) {
+      var sprite = void 0;
+      for (var toAdd = 0; toAdd < maxInstances; toAdd++) {
+        sprite = _this.add(new spriteType(game));
+      }
+    }
+    return _ret = _this, _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(Pool, [{
+    key: "create",
+    value: function create(x, y, data) {
+      var obj = this.getFirstExists(false);
+      if (!obj) {
+        obj = new this.spriteType(this.game);
+        this.add(obj, true);
+      }
+
+      return obj.spawn(x, y, data);
+    }
+  }]);
+
+  return Pool;
+}(Phaser.Group);
+
+exports.default = Pool;
 
 /***/ })
 /******/ ]);

@@ -10,7 +10,7 @@ PlayerWebSocketOptimizer.prototype.encrypt = function(obj){
     out.push(element.x)
     out.push(element.y)
   }, this);
-  return new Uint8ClampedArray(out)
+  return new Uint16Array(out)
 }
 
 //arr
@@ -22,6 +22,9 @@ PlayerWebSocketOptimizer.prototype.decrypt = function(arr){
   while(inIndex < arr.length){
     out.push({})
     out[outIndex].playerId = arr[inIndex++]
+    out[outIndex].position = {}
+    out[outIndex].position.x = arr[inIndex++]
+    out[outIndex].position.y = arr[inIndex++]
     out[outIndex].color = arr[inIndex++]
     out[outIndex].bpm = arr[inIndex++]
     out[outIndex].trails = []

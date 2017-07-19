@@ -23,7 +23,7 @@ websocketOptimizer.prototype.encrypt = function(arr){
     }
     outRegArr.push(0)
   })
-  return new Uint8ClampedArray(outRegArr)
+  return new Uint16Array(outRegArr)
 }
 
 //arr[id,pos,color,bpm,trail positions]

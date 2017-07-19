@@ -20,7 +20,7 @@ GameLoop.prototype.playerInitData = function(id){
       toEncrypt = toEncrypt.concat(this.players[key].toArr())
     }
   }
-  return new Uint8Array(toEncrypt)
+  return new Uint16Array(toEncrypt)
 }
 GameLoop.prototype.addPlayer = function(player){
   this.players[player.id] = player
@@ -29,7 +29,7 @@ GameLoop.prototype.addPlayer = function(player){
 //readableIn: [{id pos color bpm trails}{}]
 GameLoop.prototype.iteration = function(){
   if(this.readableIn.length){
-    console.log('good iteratoin!', this.readableIn)
+    return optimizer.encrypt(this.readableIn)
   } else {
     throw new Error('Game loop cannot iterate without proccessInputs')
   }

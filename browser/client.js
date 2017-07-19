@@ -3,7 +3,9 @@ import gameEmitter from './gameEmitter.js'
 let socket = io(window.location.origin)
 import {game, Game} from './game.js'
 import PlayerC from './helperFuncs/player.js'
+import optimizerC from './helperFuncs/playerwebsocketOptimizer'
 
+const optimizer = new optimizerC()
 let Client = {}
 Client.socket = socket
 Client.id = 0
@@ -51,7 +53,17 @@ Client.connect = function(){
   socket.emit('ready')
 
   socket.on('message', (message) =>{
-    console.log(message)
+    console.log('message',message)
+    let playerArr = Object.keys(message).map(key => message[key])
+
+    let readableMsg = optimizer.decrypt(playerArr)
+    console.log(readableMsg)
+    readableMsg.forEach(ele => {
+      if(ele.playerId != Client.me.id){
+        console.log('ele',ele)
+        Game.moveOtherPlayer(ele.playerId,ele.position.x,ele.position.y)
+      }
+    })
   })
 
   socket.on('init', (initObj) => {

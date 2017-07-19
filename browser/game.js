@@ -2,9 +2,13 @@
 
 import gameEmitter from './gameEmitter'
 console.log(gameEmitter)
+import Pool from './pool'
+
 // import Client from './client.js'
 let Game = {}
 let key = {}
+let Sprites = {}
+let soundpool
 
 Game.playerMap = []
 Game.myId = -1
@@ -25,8 +29,10 @@ Game.init = function(){
 Game.preload = function() {
   game.load.tilemap('map', 'assets/map/example_map.json', null, Phaser.Tilemap.TILED_JSON)
   game.load.spritesheet('tileset', 'assets/map/tilesheet.png',32,32)
-  game.load.image('player', 'assets/sprites/sprite.png')
+  Sprites.player = game.load.image('player', 'assets/sprites/sprite.png')
   game.load.audio('music', 'assets/music/all.mp3')
+  soundpool = new Pool(game, Sprites.player,20, 'sounds')
+
   game.load.start()
 }
 
@@ -49,6 +55,8 @@ Game.create = function(){
     left: game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
     right: game.input.keyboard.addKey(Phaser.Keyboard.RIGHT)
   }
+
+  soundpool.create(100,100,{velocity: {x: 100, y: 0}})
 }
 
 Game.movePlayer = function(id,x,y){
@@ -59,6 +67,14 @@ Game.movePlayer = function(id,x,y){
   tween.to({x:x,y:y}, duration)
   tween.start()
   tween.onComplete.add(function(){Game.canMoveAgain()})
+}
+
+Game.moveOtherPlayer = function(id,x,y){
+  let player = Game.playerMap[id]
+  let tween = game.add.tween(player)
+  tween.to({x:x,y:y}, 30)
+  tween.start()
+
 }
 
 Game.update = function(){
@@ -80,7 +96,7 @@ Game.update = function(){
         this.movePlayer(this.myId,x + distance,y)
       }
     } else {
-      gameEmitter.message(new Uint8Array([this.myId,x,y,1,gameProps.bpm,[]]))
+      gameEmitter.message(new Uint16Array([this.myId,x,y,1,gameProps.bpm,[]]))
     }
   }
 }
