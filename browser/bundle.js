@@ -3402,11 +3402,11 @@ var _gameEmitter2 = _interopRequireDefault(_gameEmitter);
 
 var _game = __webpack_require__(49);
 
-var _player = __webpack_require__(50);
+var _player = __webpack_require__(51);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _playerwebsocketOptimizer = __webpack_require__(51);
+var _playerwebsocketOptimizer = __webpack_require__(52);
 
 var _playerwebsocketOptimizer2 = _interopRequireDefault(_playerwebsocketOptimizer);
 
@@ -6985,15 +6985,14 @@ var _gameEmitter = __webpack_require__(22);
 
 var _gameEmitter2 = _interopRequireDefault(_gameEmitter);
 
-var _pool = __webpack_require__(52);
-
-var _pool2 = _interopRequireDefault(_pool);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log(_gameEmitter2.default); //message from server
+console.log(_gameEmitter2.default);
+// import Pool from './pool'
 
 // import Client from './client.js'
+//message from server
+
 var Game = {};
 var key = {};
 var Sprites = {};
@@ -7020,7 +7019,7 @@ Game.preload = function () {
   game.load.spritesheet('tileset', 'assets/map/tilesheet.png', 32, 32);
   Sprites.player = game.load.image('player', 'assets/sprites/sprite.png');
   game.load.audio('music', 'assets/music/all.mp3');
-  soundpool = new _pool2.default(game, Sprites.player, 20, 'sounds');
+  // soundpool = new Pool(game, Sprites.player,20, 'sounds')
 
   game.load.start();
 };
@@ -7110,7 +7109,8 @@ exports.game = game;
 exports.Game = Game;
 
 /***/ }),
-/* 50 */
+/* 50 */,
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7173,7 +7173,7 @@ Player.prototype.toTypedArr = function () {
 exports.default = Player;
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7221,67 +7221,6 @@ PlayerWebSocketOptimizer.prototype.decrypt = function (arr) {
 };
 
 module.exports = PlayerWebSocketOptimizer;
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Pool = function (_Phaser$Group) {
-  _inherits(Pool, _Phaser$Group);
-
-  function Pool(game, spriteType, instances, name) {
-    var _ret;
-
-    _classCallCheck(this, Pool);
-
-    var _this = _possibleConstructorReturn(this, (Pool.__proto__ || Object.getPrototypeOf(Pool)).call(this, game, game.world, name));
-
-    _this.game = game;
-    _this.spriteType = spriteType;
-
-    var maxInstances = 30;
-
-    if (instances > 0) {
-      var sprite = void 0;
-      for (var toAdd = 0; toAdd < maxInstances; toAdd++) {
-        sprite = _this.add(new spriteType(game));
-      }
-    }
-    return _ret = _this, _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Pool, [{
-    key: "create",
-    value: function create(x, y, data) {
-      var obj = this.getFirstExists(false);
-      if (!obj) {
-        obj = new this.spriteType(this.game);
-        this.add(obj, true);
-      }
-
-      return obj.spawn(x, y, data);
-    }
-  }]);
-
-  return Pool;
-}(Phaser.Group);
-
-exports.default = Pool;
 
 /***/ })
 /******/ ]);

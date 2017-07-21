@@ -2,7 +2,7 @@
 
 import gameEmitter from './gameEmitter'
 console.log(gameEmitter)
-import Pool from './pool'
+// import Pool from './pool'
 
 // import Client from './client.js'
 let Game = {}
@@ -31,7 +31,7 @@ Game.preload = function() {
   game.load.spritesheet('tileset', 'assets/map/tilesheet.png',32,32)
   Sprites.player = game.load.image('player', 'assets/sprites/sprite.png')
   game.load.audio('music', 'assets/music/all.mp3')
-  soundpool = new Pool(game, Sprites.player,20, 'sounds')
+  // soundpool = new Pool(game, Sprites.player,20, 'sounds')
 
   game.load.start()
 }
